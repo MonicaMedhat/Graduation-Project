@@ -33,6 +33,8 @@ try:
        records = cursor.fetchall()
        print("Total number of rows in python_developers is : ", cursor.rowcount)
        num = 0
+       num2=0
+
        for row in records:
            # Load image from database
            img = row[0]
@@ -90,21 +92,82 @@ try:
                cv2.putText(image, "#{}".format(i + 1), (x, y - 15),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
+           # img_id = 'select id from dataset where u_id=1'
+           #
+           # cursor2 = connection.cursor()
+           # cursor2.execute(img_id)
+           # records = cursor2.fetchall()
+           # y = ''.join(map(str, records))
+           # z = int(y)
+           # print(z)
 
+
+           # y=row in records
+           # x = y[0]
+           # print(x)
+
+           # img_id = 'select id from dataset where u_id=1'
+           #
+           # cursor2 = connection.cursor()
+           # cursor2.execute(img_id)
+           # records = cursor2.fetchall()
+           # # y = ''.join(map(str, records))
+           # # z = int(y)
+           # # print(z)
+           # for row in records:
+           #     n = row[0]
+           #     print(n)
+
+           img_id = 'SELECT id FROM dataset ORDER BY ID DESC LIMIT 1'
+           #
+           cursor2 = connection.cursor(prepared=True)
+           cursor2.execute(img_id)
+           records = cursor2.fetchall()
+
+           for row in records:
+               x = row[0]
+               print(x)
+
+
+           lighted=True
            if (i <= 4):
                print('Not Lighted ')
+
+               cursor = connection.cursor(prepared=True)
+               sql_select_Query = """UPDATE `dataset` SET `result_id`=%s where id= %s """
+
+               result_id=2
+               id=x
+               input =(result_id,id)
+               cursor.execute(sql_select_Query,input)
+
+               connection.commit()
+
                num += 1
 
            else:
                print('Lighted')
-               num += 1
 
+               cursor = connection.cursor(prepared=True)
+               sql_select_Query = """UPDATE `dataset` SET `result_id`=%s where id= %s """
+               result_id = 1
+               id = x
+               input = (result_id, id)
+
+               cursor.execute(sql_select_Query, input)
+
+               connection.commit()
+               num2 += 1
 
            ################################################################
 
            cv2.imshow('from database',image)
            cv2.waitKey(0)
            cv2.destroyAllWindows()
+
+
+
+
        cursor.close()
 except Error as e :
     print ("Error while connecting to MySQL", e)
@@ -181,7 +244,8 @@ finally:
 
 #results = len(num)
 
-print("labels array size ",num)
+print("labels array size NL ",num)
+print("labels array size L ",num2)
 
 # show the output image
 
